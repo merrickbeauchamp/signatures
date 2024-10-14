@@ -1,4 +1,5 @@
-     document.getElementById('save').onclick = function () {
+console.log("Hello")
+document.getElementById('save').onclick = function () {
 
     var link = document.getElementById("link");
     link.download = "test";
