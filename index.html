@@ -12,7 +12,7 @@ canvas {
 Name: <input type="text" id="name" name="name"><br><br>
 <div id="canvas_div" style="overflow-x: auto;">
 <canvas id="canvas" width="900" height="360"></canvas>
-<button onclick="javascript:clearArea();return false;">Clear Area</button>
+<button id="clear">Clear Area</button>
     <button id="save">Save</button>
 Line width : <select id="selWidth">
     <option value="11">11</option>
@@ -36,13 +36,18 @@ const context = canvas.getContext('2d');
 let link = document.getElementById("link")
 const save = document.getElementById("save")
     let name = document.getElementById("name")
-    save.addEventListener("click", () => {
+
+    const signaturePad = new SignaturePad(canvas);
+        save.addEventListener("click", () => {
         link.download = name.value;
   link.href = canvas.toDataURL()
   link.click();
         name.value = ""
-        clearArea()
+        signaturePad.clear();
     })
-    const signaturePad = new SignaturePad(canvas);
+   const clear = document.getElementById("clear")
+    clear.addEventListener("click", () => {
+        signaturePad.clear();
+    })
 
 </script>
