@@ -39,10 +39,13 @@ var offsetX;
 var offsetY;
 let link = document.getElementById("link")
 const save = document.getElementById("save")
+    let name = document.getElementById("name")
     save.addEventListener("click", () => {
-        link.download = 'hello.png';
+        link.download = name.value;
   link.href = canvas.toDataURL()
   link.click();
+        name.value = ""
+        clearArea()
     })
     
 function startup() {
