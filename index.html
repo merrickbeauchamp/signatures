@@ -1,35 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Art</title>
+    <title>lazy-brush Basic Example</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+        cursor: crosshair;
+      }
+    </style>
   </head>
   <body>
-    <div
-      id="draw"
-      style="
-        position: fixed;
-        margin-left: 20px;
-        border: 2px solid black;
-        border-radius: 5px;
-        padding: 5px;
-      "
-    >
-      <p id="text">Draw a vertical line in the box. |</p>
-      <canvas
-        id="canvas"
-        width="200px"
-        height="100px"
-        style="border: 2px solid black"
-      ></canvas>
-      <br />
-      <button id="clear">Clear</button>
-      <button id="submit">Submit</button>
+    <div id="app">
+      <canvas id="canvas" width="1024" height="768"></canvas>
     </div>
-    <button id="reset" style="display: none">Reset</button>
-    <canvas id="final"> </canvas>
+
+    <script type="module">
+      import { LazyBrush } from 'https://cdn.jsdelivr.net/npm/lazy-brush@2.0.0/lib/lazy-brush.js'
+
+      // The lazy radius.
+      const LAZY_RADIUS = 60
+      const BRUSH_RADIUS = 30
+
+      // Create new LazyBrush instance.
+      const lazy = new LazyBrush({
+        enabled: true,
+        radius: LAZY_RADIUS
+      })
+      const canvas = document.getElementById('canvas')
+
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+
+      // While not always reccommended, we can directly draw in your event
+      // handler here. Generally it is better to do that in an animation loop.
+      // See the "friction.html" example on how to do that.
+      canvas.addEventListener('mousemove', function (e) {
+        const x = e.clientX
+        const y = e.clientY
+        lazy.update({ x, y })
+
+        const brushHasMoved = lazy.brushHasMoved()
+
+        // We only need to update the canvas if the brush has moved.
+        if (brushHasMoved) {
+          // Get the updated brush coordinates.
+          const brush = lazy.getBrushCoordinates()
+
+          // Draw the canvas.
+          const ctx = canvas.getContext('2d')
+
+          // Clear entire canvaas.
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+          // Draw brush point
+          ctx.beginPath()
+          ctx.fillStyle = 'red'
+          ctx.arc(brush.x, brush.y, BRUSH_RADIUS, 0, Math.PI * 2, true)
+          ctx.fill()
+
+          // Draw the lazy radius.
+          ctx.beginPath()
+          ctx.strokeStyle = '#ccc'
+          ctx.arc(brush.x, brush.y, LAZY_RADIUS, 0, Math.PI * 2, true)
+          ctx.stroke()
+        }
+      })
+    </script>
   </body>
-  <script src="./index.js"></script>
 </html>
