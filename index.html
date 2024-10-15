@@ -39,6 +39,9 @@ const save = document.getElementById("save")
 
     const signaturePad = new SignaturePad(canvas);
         save.addEventListener("click", () => {
+        if(name.value == "") {
+            return alert("Enter Name!")
+        }
         link.download = name.value;
   link.href = canvas.toDataURL()
   link.click();
